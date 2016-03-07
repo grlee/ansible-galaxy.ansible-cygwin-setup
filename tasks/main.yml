@@ -1,0 +1,39 @@
+---
+- name: Run setup
+  setup:
+
+#- debug: var=hostvars[inventory_hostname]
+
+- name: Update facts if running cygwin
+  set_fact: setup_cygwin_os_system_trunicated={{ansible_system | string | lower | truncate(6, True, "") == "cygwin"}}
+
+- command: uname -o
+  register: setup_cygwin_operating_system
+- command: uname -s
+  register: setup_cygwin_kernel_name
+- shell: "uname -r | sed 's|\\.| |g' | awk '{print $1}'"
+  register: setup_cygwin_kernel_major_release
+- command: uname -r
+  register: setup_cygwin_kernel_release
+- command: uname -v
+  register: setup_cygwin_kernel_version
+
+- set_fact: ansible_distribution="Cygwin"
+  when: setup_cygwin_os_system_trunicated is defined and setup_cygwin_os_system_trunicated == True
+
+- set_fact: ansible_os_family="Cygwin"
+  when: setup_cygwin_os_system_trunicated is defined and setup_cygwin_os_system_trunicated == True
+
+- set_fact: ansible_distribution_major_version={{setup_cygwin_kernel_major_release.stdout}}
+  when: setup_cygwin_os_system_trunicated is defined and setup_cygwin_os_system_trunicated == True
+
+- set_fact: ansible_distribution_release={{setup_cygwin_kernel_release.stdout}}
+  when: setup_cygwin_os_system_trunicated is defined and setup_cygwin_os_system_trunicated == True
+
+- set_fact: ansible_distribution_version={{setup_cygwin_kernel_version.stdout}}
+  when: setup_cygwin_os_system_trunicated is defined and setup_cygwin_os_system_trunicated == True
+
+- set_fact: ansible_pkg_mgr="apt-cyg"
+  when: setup_cygwin_os_system_trunicated is defined and setup_cygwin_os_system_trunicated == True
+
+#- debug: var=hostvars[inventory_hostname]
