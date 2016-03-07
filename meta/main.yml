@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: George Lee
+  description: Sets ansible facts for cygwin nodes
+  company:
+  license: BSD
+  min_ansible_version: 1.4
+  platforms:
+  - name: Cygwin
+    versions:
+    - all
+  categories:
+  - system
+dependencies: []
